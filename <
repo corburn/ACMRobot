@@ -211,10 +211,9 @@ URL: https://code.google.com/p/io-2012-slides
       <section>
 		<p>It's difficult to experiment without feedback. Our first priority is to get power to the controllers.</p>
 		<p>The Bot Board II is not a priority unless we get a processor for it.</p>
+		<!--TODO: Does the Radioshack power supply fit the Beagleboard? We could cut that connector and use it to connect the motor controller output to the Beagleboard input.-->
 		<p>The eZdsp is not a priority</p>
 		<p>The Beagleboard cannot be powered by the Motor Controller output because it does not supply enough amps.
-		<!--TODO: Does the Radioshack power supply fit the Beagleboard?-->
-		<p>The battery connectors should make charging easier and prevent plugging the battery in backwards. Doing so would destroy the controller.
       </section>
     </aside>
     <hgroup>
@@ -273,7 +272,6 @@ URL: https://code.google.com/p/io-2012-slides
 		<p>The Bot Board II is not a priority unless we get a processor for it.</p>
 		<p>The eZdsp is not a priority</p>
 		<p>The Beagleboard cannot be powered by the Motor Controller output because it does not supply enough amps.
-		<p>Figure out how to move the servos and what motions can be combined to do something useful.
       </section>
     </aside>
     <hgroup>
@@ -282,18 +280,16 @@ URL: https://code.google.com/p/io-2012-slides
     <article>
       <p>BeagleBoard</p>
       <ul class="build">
-		<li>Configure usb wireless or ethernet networking</li>
-		<li>Command and Query Servo Controller</li>
-		<li>Interface with eZdsp USB stick</li>
+		<li>usb wireless or ethernet networking</li>
+		<li></li>
       </ul>
 	  <p>SSC-32 Servo Controller</p>
 	  <ul class="build">
-		<li>Use the <a href="http://www.lynxmotion.com/c-15-software.aspx">software</a> to figure out how to move the servos</li>
-		<li>Send analog input to the Sabertooth Motor Controller
+		<li>Play with the <a href="http://www.lynxmotion.com/c-15-software.aspx">Software</a> to figure how/what to combine motions to do stuff</li>
 	  </ul>
-	  <p>Robot</p>
+	  <p>Sabertooth Motor Controller</p>
 	  <ul class="build">
-		<li>Do Stuff...</li>
+		<li>Analog input from SSC-32</li>
 	  </ul>
     </article>
   </slide>
