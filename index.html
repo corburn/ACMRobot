@@ -1,0 +1,318 @@
+<!--
+Google IO 2012 HTML5 Slide Template
+
+Authors: Eric Bidelman <ebidel@gmail.com>
+         Luke Mahé <lukem@google.com>
+
+URL: https://code.google.com/p/io-2012-slides
+-->
+<!DOCTYPE html>
+<html>
+<head>
+  <title>NAU ACM</title>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="chrome=1">
+  <!--<meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0">-->
+  <!--<meta name="viewport" content="width=device-width, initial-scale=1.0">-->
+  <!--This one seems to work all the time, but really small on ipad-->
+  <!--<meta name="viewport" content="initial-scale=0.4">-->
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <link rel="stylesheet" media="all" href="theme/css/default.css">
+  <link rel="stylesheet" media="only screen and (max-device-width: 480px)" href="theme/css/phone.css">
+  <base target="_blank"> <!-- This amazingness opens all links in a new tab. -->
+  <script data-main="js/slides" src="js/require-1.0.8.min.js"></script>
+</head>
+<body style="opacity: 0">
+
+<slides class="layout-widescreen">
+
+  <slide class="logoslide nobackground">
+    <article class="flexbox vcenter">
+      <span><img src="images/nau_acm.png"></span>
+    </article>
+  </slide>
+
+  <slide class="title-slide segue nobackground">
+    <aside class="note">
+      <section>
+		<p>Hi, my name is Jason Travis and I'll be covering the status of the robot project. Let's take a look at what we have starting with the controllers.</p>
+      </section>
+    </aside>
+    <aside class="gdbar"><img src="images/acm-logo.png"></aside>
+    <!-- The content of this hgroup is replaced programmatically through the slide_config.json. -->
+    <hgroup class="auto-fadein">
+      <h1 data-config-title><!-- populated from slide_config.json --></h1>
+      <h2 data-config-subtitle><!-- populated from slide_config.json --></h2>
+      <p data-config-presenter><!-- populated from slide_config.json --></p>
+    </hgroup>
+      <img style="float:right" src="images/fullrobot.jpg" class="reflect" alt="Description" title="Description">
+  </slide>
+
+  <slide class="segue dark nobackground">
+    <aside class="gdbar"><img src="images/acm-logo.png"></aside>
+    <hgroup class="auto-fadein">
+      <h2>Controllers</h2>
+	  <!--<h3>Subtitle</h3>-->
+    </hgroup>
+  </slide>
+
+  <slide>
+    <aside class="note">
+      <section>
+		<p>This is a micro/servocontroller combo; the brain and spinal cord of the robot. It's a combination of the next two parts, but right now it's missing a processor so it doesn't do anything.</p>
+        <ul>
+		  <li>Specs depend on the processor</li>
+			<ul>
+				<li>BASIC Atom Pro - $56.95</li>
+				<li>BASIC Atom - $59.95</li>
+				<li>BASIC Stamp 2-E - $54.00</li>
+			</ul>
+		  <li>BasicATOM Pro has 32k Flash</li>
+		  <li>Programmable in BASIC, C, or ASM</li>
+        </ul>
+      </section>
+    </aside>
+    <hgroup>
+      <h2>Bot Board II</h2>
+    </hgroup>
+    <article>
+      <img src="images/botboard2.jpg" alt="Description" title="Description">
+	<ul>
+		<li>5.5 - 9V logic circuit</li>
+		<li>4.8 - 7.2V servos</li>
+	</ul>
+    </article>
+  </slide>
+
+  <slide>
+    <aside class="note">
+      <section>
+		<p>This is the brain of the robot. Right now it has a wall outlet, but when this thing is ready to move it'll need power. It also needs a DB9 to IDC10 ribbon cable to connect to the servocontroller. This is a serial connection that sends strings of instructions that select the: servo, position, and speed. Linux treats everything as a file, so sending these instructions should be as simple as reading and writing to a file.</p>
+      </section>
+    </aside>
+    <hgroup>
+      <h2>Beagleboard Rev C2</h2>
+    </hgroup>
+    <article>
+      <img src="images/BeagleBoard_C4_with_SD_and_serial.jpg" alt="Description" title="Description">
+	<ul>
+		<li>5V 1.2A+</li>
+		<li>10 pin RS232</li>
+		<li>ARM Cortex A8</li>
+		<li>256MB NAND memory</li>
+		<li>ArchLinux ARM</li>
+		<li>JTIG</li>
+		<li>EHCI (2.0 only) USB</li>
+		<li>USB OTG</li>
+		<ul>
+			<li>J6 jumpers enable host mode</li>
+			<li>alternative power source</li>
+		</ul>
+	</ul>
+    </article>
+  </slide>
+
+  <slide>
+    <aside class="note">
+      <section>
+		<p>This is the servocontroller. We need to figure out how we want to move the arm or at least what motion, position, and speed combinations are useful so we can feed that information into the program when we reach that stage. If you're interested, go to lynxmotion.com, Products, Software to download the ArmControl, Rover Controller, and Servo Sequencer programs. Before we can use it, however, it needs power. It's logic circuit is powered by a 9V battery, but the servos need 4.8 - 7.2V. 
+	<p>General command format: #&lt;ch&gt;P&lt;pw&gt;S&lt;spd&gt;...T&lt;time&gt;\r</p>
+	<ul>
+		<li>ch = servo channel</li>
+		<li>pw = pulse width = position</li>
+		<li>spd = max speed (if slower, this supersedes time)</li>
+		<li>This pattern can be repeated for multiple servos in one action</li>
+		<li>time = max time for all servos to complete the action</li>
+		<li>all commands end with carriage return</li>
+	</ul>
+	<ul>
+		<li>What can we do with the EEPROM?</li>
+		<!--TODO: We won't know the capacity until we power it up or look it up-->
+	</ul>
+      </section>
+    </aside>
+    <hgroup>
+      <h2>SSC-32 Servo Controller</h2>
+    </hgroup>
+    <article>
+      <img src="images/ssc32.jpg" alt="Description" title="Description">
+	<ul>
+		<li>5.5 - 9V logic circuit</li>
+		<li>4.8 - 7.2V servos</li>
+		<li>Electrically Eraseable Programmable Read-Only Memory</li>
+		<ul>
+			<li>The EEPROM is the small removeable chip behind the DB9 serial port.</li>
+			<li>It can store servo sequences.</li>
+		</ul>
+	</ul>
+	</article>
+  </slide>
+
+  <slide>
+    <aside class="note">
+      <section>
+		<p>This is where the motor controller comes in. It has a 5V 1A output which should power the servos, but - it also needs power. These are some of the recommended power sources. As you can see it's not too picky. It has a lithium battery mode to prevent cell damage due to over-discharge. It's strongly recommended a battery connector is used, both for easy removal when charging and to avoid attaching it backwards. There is no reverse polarity protection.</p>
+      </section>
+    </aside>
+    <hgroup>
+      <h2>Sabertooth 2x12 Motor Controller</h2>
+    </hgroup>
+    <article>
+      <img src="images/sabertooth.jpg" alt="Description" title="Description">
+	<ul>
+		<li>6 - 24V input</li>
+		<li>5V 1A output</li>
+		<li>Recommended Power Sources:</li>
+		<ul>
+			<li>5 - 18 cell NiMH or NiCd</li>
+			<li>2s - 6s lithium ion or lithium polymer</li>
+			<li>6 - 24V lead acid</li>
+			<li>6 - 24V power supply (when in parallel with a suitable battery)</li>
+		</ul>
+	</ul>
+    </article>
+  </slide>
+
+   <slide>
+    <aside class="note">
+      <section>
+		<p>This is the battery, but we can't connect it, charge it, or verify it still works.
+      </section>
+    </aside>
+    <hgroup>
+      <h2>Dell P5413 Battery</h2>
+    </hgroup>
+    <article>
+      <img src="images/DellP5413.jpg" alt="Description" title="Description">
+	<ul>
+		<li>9.6V 4500mAh</li>
+		<li>Ni-MH</li>
+	</ul>
+    </article>
+  </slide>
+
+  <slide>
+    <aside class="note">
+      <section>
+		<p>This is a Digital Signal Processor. It was probably intended to use a webcam or audio input as sensors. There is not much useful documentation on this componentIf you're interested in checking it out, the Texas Instruments documentation mentioned the Code Composer 4 IDE which is based on Eclipse.</p>
+      </section>
+    </aside>
+    <hgroup>
+      <h2>TMS320VC5505 eZdsp USB Stick</h2>
+    </hgroup>
+    <article>
+      <img src="images/usb_ezdsp_tms320vc5505.jpg" alt="Description" title="Description">
+	  <p>Samtec MEC1-130-02-S-D-NP-A</p>
+    </article>
+  </slide>
+
+ <slide class="segue dark nobackground">
+    <aside class="gdbar"><img src="images/acm-logo.png"></aside>
+    <hgroup class="auto-fadein">
+      <h2>Where do we go from here?</h2>
+      <!--<h3>Subtitle Placeholder</h3>-->
+    </hgroup>
+  </slide>
+
+  <slide>
+    <aside class="note">
+      <section>
+      <ul>
+		<li>BASIC Atom Pro - $56.95</li>
+		<li>BASIC Atom - $59.95</li>
+		<li>BASIC Stamp 2-E - $54.00</li>
+      </ul>
+      </section>
+    </aside>
+    <hgroup>
+      <h2>Parts</h2>
+    </hgroup>
+    <article>
+      <p>Bot Board II Processor</p>
+      <ul>
+		<li>BASIC Atom Pro, BASIC Atom, or BASIC Stamp</li>
+      </ul>
+      <p>BeagleBoard</p>
+	  <ul>
+		<li>Dev: usb to ethernet adapter</li>
+		<li>Prod: DB9 to ICS10 ribbon cable</li>
+		<li>SD card</li>
+      </ul>
+	  <p>SSC-32 Servo Controller</p>
+	  <ul>
+		<li>USB to serial cable</li>
+	  </ul>
+      <p>Power</p>
+      <ul>
+		<li>Main power source with charger and connectors</li>
+		<li>Beagleboard power source</li>
+      </ul>
+    </article>
+  </slide>
+
+  <slide>
+    <hgroup>
+      <h2>Programming</h2>
+    </hgroup>
+    <article>
+      <p>BeagleBoard</p>
+      <ul>
+		<li>Configure usb wireless or ethernet networking</li>
+		<li>Command and Query Servo Controller</li>
+		<li>Interface with eZdsp USB stick</li>
+      </ul>
+	  <p>SSC-32 Servo Controller</p>
+	  <ul>
+		<li>Use the <a href="http://www.lynxmotion.com/c-15-software.aspx">software</a> to figure out how to move the servos</li>
+		<li>Send analog input to the Sabertooth Motor Controller</li>
+		<li>Update firmware</li>
+		<li>Program EEPROM</li>
+	  </ul>
+	  <p>Robot</p>
+	  <ul>
+		<li>Path planning using Voronoi Diagrams and Webcam Image Processing</li>
+		<li>Do Stuff...</li>
+	  </ul>
+    </article>
+  </slide>
+
+  <slide class="thank-you-slide segue nobackground">
+    <aside class="gdbar right"><img src="images/acm-logo.png"></aside>
+    <article class="flexbox vleft auto-fadein">
+      <h2>&lt;Thank You!&gt;</h2>
+	  <!--TODO: Team Info-->
+	  <p>Jason Travis - jlt256@nau.edu</p>
+    </article>
+    <p class="auto-fadein" data-config-contact>
+      <!-- populated from slide_config.json -->
+    </p>
+  </slide>
+
+  <slide class="logoslide dark nobackground">
+    <article class="flexbox vcenter">
+      <span><img src="images/nau_acm.png"></span>
+    </article>
+  </slide>
+
+  <slide class="backdrop"></slide>
+
+</slides>
+
+<script>
+var _gaq = _gaq || [];
+_gaq.push(['_setAccount', 'UA-XXXXXXXX-1']);
+_gaq.push(['_trackPageview']);
+
+(function() {
+  var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+  ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+  var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+})();
+</script>
+
+<!--[if IE]>
+  <script src="http://ajax.googleapis.com/ajax/libs/chrome-frame/1/CFInstall.min.js"></script>
+  <script>CFInstall.check({mode: 'overlay'});</script>
+<![endif]-->
+</body>
+</html>

@@ -227,6 +227,11 @@ slides > slide {
     }
   }
 
+  > article > img {
+		float:right;
+		width:50%
+	}
+
   > article:only-child {
     height: 100%;
 
