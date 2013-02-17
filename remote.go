@@ -5,6 +5,8 @@ import (
 	"github.com/tarm/goserial"
 	"io"
 	"log"
+	"os"
+	"os/signal"
 	"strconv"
 )
 
@@ -23,9 +25,28 @@ import (
 //  Reverse mid speed: 222<enter>
 //  Stop:              5<enter>
 func main() {
+	// Beagleboard builtin leds
+	log.Println("Accessing leds")
+	usr0, _ := os.Open("/sys/class/leds/beagleboard::user0/brightness")
+	defer usr0.Close()
+	usr1, _ := os.Open("/sys/class/leds/beagleboard::user1/brightness")
+	defer usr1.Close()
+
+	usr1.Write([]byte("1"))
+
+	// capture ctrl+c, turn off led, and exit
+	c := make(chan os.Signal, 1)
+	signal.Notify(c, os.Interrupt)
+	go func() {
+		<-c
+		log.Println("Captured interrupt: turnoff usr1 and exit.")
+		defer usr1.Close()
+		usr1.Write([]byte("0"))
+		os.Exit(1)
+	}()
 	log.Print("Accessing controller")
-	c := &serial.Config{Name: "/dev/ttyO2", Baud: 9600}
-	s, err := serial.OpenPort(c)
+	conf := &serial.Config{Name: "/dev/ttyO2", Baud: 9600}
+	s, err := serial.OpenPort(conf)
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -36,7 +57,7 @@ func main() {
 	}
 
 	// Listen for input in a separate goroutine
-	log.Println("go: Read input")
+	log.Println("Listening for input")
 	ch := make(chan string)
 	go func(ch chan string) {
 		var s string
@@ -46,39 +67,52 @@ func main() {
 		}
 	}(ch)
 
-	log.Println("Commands:")
+	// Execute move commands
+	left, right := 1500, 1500
 	for v := range ch {
 		offset := len(v) * 100
 		switch v[0] {
 		case '5':
 			// stop
-			if err := move(s, 1500, 1500); err != nil {
-				log.Fatal(err)
-			}
+			left, right = 1500, 1500
 		case '8':
 			// forward
-			pw := 1500 + offset
-			if err := move(s, pw, pw); err != nil {
-				log.Fatal(err)
-			}
+			left, right = left+offset, right+offset
 		case '2':
 			// reverse
-			pw := 1500 - offset
-			if err := move(s, pw, pw); err != nil {
-				log.Fatal(err)
-			}
+			left, right = left-offset, right-offset
 		case '4':
 			// left
-			if err := move(s, 1500-offset, 1500+offset); err != nil {
-				log.Fatal(err)
-			}
+			left -= offset
+			right += offset
 		case '6':
 			// right
-			if err := move(s, 1500+offset, 1500-offset); err != nil {
-				log.Fatal(err)
-			}
+			left += offset
+			right -= offset
 		case '0':
 			reset(s)
+			// skip the call to nove
+			continue
+		}
+
+		// enforce limits
+		if left < 1000 {
+			left = 1000
+		}
+		if left > 2000 {
+			left = 2000
+		}
+		if right < 1000 {
+			right = 1000
+		}
+		if right > 2000 {
+			right = 2000
+		}
+
+		log.Printf("%d %d", left, right)
+		// move
+		if err := move(s, left, right); err != nil {
+			log.Fatal(err)
 		}
 	}
 }

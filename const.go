@@ -14,5 +14,5 @@ const (
 
 // Claw positions
 const (
-	NEUTRAL  = "#" + BASE + "P1500#" + SHOULDER + "P1800#" + ELBOW + "P2200#" + FOREARM + "P1500#" + WRIST + "P600#" + CLAW + "P1500T5000\r"
+	NEUTRAL = "#" + BASE + "P1500#" + SHOULDER + "P1800#" + ELBOW + "P2200#" + FOREARM + "P1500#" + WRIST + "P600#" + CLAW + "P1500T5000\r"
 )
