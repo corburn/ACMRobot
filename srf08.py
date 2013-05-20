@@ -28,19 +28,23 @@ class SRF08(object):
 			self.units = 'ms'
 
 	def __str__(self):
-		self.bus.write_byte_data(self.address, 0, self.mode)
-		#self.bus.write_byte_data(self.address, 2, 0x00)
-		#while self.bus.read_byte_data(self.address, 0) == 0xFF:
-			# TODO threading
-			# SRF08 will not respond while ranging. The I2C data line is pulled high
-			# if nothing is driving it. Read from the software version register until
-			# it stops returning 0xFF.
-			#pass
-		#sleep(.07)
-		sleep(.5)
-		#return str(self.bus.read_byte_data(self.address, 0))
-		return 'Range: ' + str(self.range()) + self.units + '\n' + 'Light: ' + str(self.light())
-		
+		try:
+			self.bus.write_byte_data(self.address, 0, self.mode)
+			#self.bus.write_byte_data(self.address, 2, 0x00)
+			#while self.bus.read_byte_data(self.address, 0) == 0xFF:
+				# TODO threading
+				# SRF08 will not respond while ranging. The I2C data line is pulled high
+				# if nothing is driving it. Read from the software version register until
+				# it stops returning 0xFF.
+				#pass
+			#sleep(.07)
+			sleep(.5)
+			#return str(self.bus.read_byte_data(self.address, 0))
+			return 'Range: ' + str(self.range()) + self.units + '\n' + 'Light: ' + str(self.light())
+		except IOError:
+			# An IOError likely means the device is not connected or a read was attempted before
+			# the ranging was complete.
+			return 'IOError'
 
 	# Returns the light level from 0 (dark) to 255 (bright)
 	def light(self):
